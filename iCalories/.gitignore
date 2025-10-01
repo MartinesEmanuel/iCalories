@@ -40,7 +40,6 @@ yarn-error.*
 /ios
 /android
 
-
 *.pyc 
 venv/  
 .venv/
