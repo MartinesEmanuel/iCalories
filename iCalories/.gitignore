@@ -36,6 +36,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+<<<<<<< Updated upstream
 # generated native folders
 /ios
 /android
@@ -51,3 +52,10 @@ Datasetcarnes/runs/
 *.pt
 *.jpg
 *.png
+=======
+app-example
+
+# generated native folders
+/ios
+/android
+>>>>>>> Stashed changes
