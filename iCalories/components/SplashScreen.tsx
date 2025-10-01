@@ -6,7 +6,7 @@ const SplashScreen = () => (
     <Image
       source={require('../images/splashscreen.png')}
       style={styles.image}
-      resizeMode="contain"
+      resizeMode="cover"
     />
   </View>
 );
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   image: {
-    width: '80%',
-    height: '50%',
+    width: '100%',
+    height: '100%',
   },
 });
 
