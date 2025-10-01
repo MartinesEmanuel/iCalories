@@ -43,6 +43,7 @@ yarn-error.*
 *.pyc 
 venv/  
 .venv/
+Datasetcarnes/dataset/
 Datasetcarnes/train/
 Datasetcarnes/test/
 Datasetcarnes/valid/
