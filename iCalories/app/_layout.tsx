@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import React, { useEffect, useState } from 'react';
 import SplashScreen from '../components/SplashScreen';
+import CameraScreen from '../components/CameraScreen';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -14,16 +15,21 @@ export const unstable_settings = {
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [showSplash, setShowSplash] = useState(true);
+  const [showCamera, setShowCamera] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
+      setShowCamera(true);
     }, 5000); // 5 segundos
     return () => clearTimeout(timer);
   }, []);
 
   if (showSplash) {
     return <SplashScreen />;
+  }
+  if (showCamera) {
+    return <CameraScreen />;
   }
 
   return (
