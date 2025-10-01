@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['done', 'raw']
+
+roboflow:
+  workspace: vision-4xqot
+  project: carne-asada
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/vision-4xqot/carne-asada/dataset/1
