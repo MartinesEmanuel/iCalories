@@ -1,13 +1,14 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 
 export default function CameraScreen() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
-  const cameraRef = useRef<any>(null);
+  const [takePhoto, setTakePhoto] = useState(false);
 
   if (!permission) {
     return <View style={styles.container}><Text style={styles.message}>Carregando permissões...</Text></View>;
@@ -21,15 +22,40 @@ export default function CameraScreen() {
     );
   }
 
-  async function takePhoto() {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePhoto();
-      if (photo?.uri) {
-        setPhotoUri(photo.uri);
-        await MediaLibrary.createAssetAsync(photo.uri);
-        Alert.alert('Foto salva!', 'A foto foi salva na galeria.');
-      }
+  async function sendPhotoToBackend(photoUri: string) {
+    const API_URL = 'http://192.168.1.30:8000/predict'; // Troque pelo IP do seu backend
+    const formData = new FormData();
+    formData.append('file', {
+      uri: photoUri,
+      name: 'photo.jpg',
+      type: 'image/jpeg',
+    } as any);
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      const result = await response.json();
+      Alert.alert('Resultado', `Classe: ${result.class}\nConfiança: ${result.confidence}`);
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível enviar a imagem.');
     }
+  }
+
+  function handlePhotoCaptured(photo: { uri: string }) {
+    setPhotoUri(photo.uri);
+    MediaLibrary.createAssetAsync(photo.uri);
+    sendPhotoToBackend(photo.uri);
+    Alert.alert('Foto salva!', 'A foto foi salva na galeria.');
+  }
+
+  function handleTakePhoto() {
+    setTakePhoto(true);
+    setTimeout(() => setTakePhoto(false), 100); // Reset flag
   }
 
   function toggleCameraFacing() {
@@ -40,12 +66,17 @@ export default function CameraScreen() {
     <View style={styles.container}>
       {!photoUri ? (
         <>
-          <CameraView ref={cameraRef} style={styles.camera} facing={facing} />
+          <CameraView
+            style={styles.camera}
+            facing={facing}
+            photo={takePhoto}
+            onPhotoCaptured={handlePhotoCaptured}
+          />
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={[styles.button, styles.flipButton]} onPress={toggleCameraFacing}>
               <Text style={styles.buttonText}>Flip</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.captureButton]} onPress={takePhoto}>
+            <TouchableOpacity style={[styles.button, styles.captureButton]} onPress={handleTakePhoto}>
               <Text style={styles.buttonText}>Tirar foto</Text>
             </TouchableOpacity>
           </View>
