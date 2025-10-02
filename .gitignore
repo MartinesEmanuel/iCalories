@@ -43,10 +43,9 @@ yarn-error.*
 *.pyc 
 venv/  
 .venv/
-Datasetcarnes/train/
-Datasetcarnes/test/
-Datasetcarnes/valid/
-Datasetcarnes/runs/
+modelo/dados_crus/dataset
+modelo/dataset_final/
+modelo/runs
 *.pt
 *.jpg
 *.png
