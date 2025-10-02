@@ -45,6 +45,7 @@ venv/
 .venv/
 modelo/dados_crus/dataset
 modelo/dataset_final/
+modelo/runs
 *.pt
 *.jpg
 *.png
